@@ -599,7 +599,7 @@ static void handle_event_change(enum command_response cmd, void *data)
 
 			if (msm_comm_get_stream_output_mode(inst) !=
 				HAL_VIDEO_DECODER_SECONDARY) {
-			        dprintk(VIDC_DBG,
+				dprintk(VIDC_DBG,
 					"event_notify->height = %d event_notify->width = %d\n",
 					event_notify->height,
 					event_notify->width);

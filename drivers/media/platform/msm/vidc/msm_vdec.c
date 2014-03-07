@@ -814,7 +814,8 @@ int msm_vdec_g_fmt(struct msm_vidc_inst *inst, struct v4l2_format *f)
 			f->fmt.pix_mp.plane_fmt[0].reserved[0] =
 				(__u16)inst->prop.height[CAPTURE_PORT];
 		}
-	        if (msm_comm_get_stream_output_mode(inst) ==
+
+		if (msm_comm_get_stream_output_mode(inst) ==
 			HAL_VIDEO_DECODER_SECONDARY) {
 			if (f->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
 				f->fmt.pix_mp.height =

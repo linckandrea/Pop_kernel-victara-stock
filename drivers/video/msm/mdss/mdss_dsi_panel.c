@@ -37,6 +37,10 @@
 #include "mdss_fb.h"
 #include "dsi_v2.h"
 
+#ifdef CONFIG_POWERSUSPEND
+#include <linux/powersuspend.h>
+#endif
+
 #define DT_CMD_HDR 6
 #define DROPBOX_DISPLAY_ISSUE "display_issue"
 #define ESD_DROPBOX_MSG "ESD event detected"
@@ -101,6 +105,10 @@ static void mdss_dsi_panel_bl_on_defer_wait(struct mdss_dsi_ctrl_pdata *ctrl)
 }
 
 bool display_on = true;
+
+#ifdef CONFIG_POWERSUSPEND
+	set_power_suspend_state_panel_hook(POWER_SUSPEND_INACTIVE);
+#endif
 
 bool is_display_on()
 {
@@ -949,6 +957,10 @@ disable_regs:
 
 
 	display_on = false;
+
+#ifdef CONFIG_POWERSUSPEND
+	set_power_suspend_state_panel_hook(POWER_SUSPEND_ACTIVE);
+#endif
 
 	return 0;
 }

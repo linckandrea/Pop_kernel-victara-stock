@@ -84,7 +84,7 @@
 #undef DEBUG_LAZYPLUG
 
 #define LAZYPLUG_MAJOR_VERSION	1
-#define LAZYPLUG_MINOR_VERSION	0
+#define LAZYPLUG_MINOR_VERSION	3
 
 #define DEF_SAMPLING_MS			(268)
 #define DEF_IDLE_COUNT			(19) /* 268 * 19 = 5092, almost equals to 5 seconds */
@@ -388,6 +388,7 @@ static void lazyplug_work_fn(struct work_struct *work)
 		msecs_to_jiffies(sampling_time));
 }
 
+<<<<<<< HEAD
 static void wakeup_boost(void)
 {
 	unsigned int cpu;
@@ -467,6 +468,8 @@ static struct early_suspend lazyplug_early_suspend_driver = {
 };
 #endif	/* CONFIG_HAS_EARLYSUSPEND */
 
+=======
+>>>>>>> 08b180d4194... lazyplug: Remove wakeup_boost
 static unsigned int Lnr_run_profile_sel = 0;
 static unsigned int Ltouch_boost_active = true;
 static bool Lprevious_state = false;

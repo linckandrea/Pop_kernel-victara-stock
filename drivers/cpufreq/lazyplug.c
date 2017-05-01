@@ -75,8 +75,7 @@
 #undef DEBUG_LAZYPLUG
 
 #define LAZYPLUG_MAJOR_VERSION	1
-
-#define LAZYPLUG_MINOR_VERSION	8
+#define LAZYPLUG_MINOR_VERSION	9
 
 #define DEF_SAMPLING_MS			(268)
 #define DEF_IDLE_COUNT			(19) /* 268 * 19 = 5092, almost equals to 5 seconds */
@@ -99,12 +98,6 @@ static struct workqueue_struct *lazyplug_boost_wq;
 static unsigned int __read_mostly lazyplug_active = 0;
 module_param(lazyplug_active, uint, 0664);
 
-<<<<<<< HEAD
-static unsigned int __read_mostly touch_boost_active = 1;
-module_param(touch_boost_active, uint, 0664);
-
-=======
->>>>>>> 8997785... lazyplug: Remove input handler
 static unsigned int __read_mostly nr_run_profile_sel = 0;
 module_param(nr_run_profile_sel, uint, 0664);
 
@@ -327,24 +320,20 @@ static void unplug_cpu(int min_active_cpu)
 static void lazy_suspend_handler(void)
 {
 	if (last_state) {
-		if (lazyplug_active) {
-			pr_info("lazyplug: screen-on, turn on cores\n");
-			mutex_lock(&lazyplug_mutex);
-			/* keep cores awake long enough for faster wake up */
-			persist_count = BUSY_PERSISTENCE;
-			mutex_unlock(&lazyplug_mutex);
-		}
+		pr_info("lazyplug: screen-on, turn on cores\n");
+		mutex_lock(&lazyplug_mutex);
+		/* keep cores awake long enough for faster wake up */
+		persist_count = BUSY_PERSISTENCE;
+		mutex_unlock(&lazyplug_mutex);
 		queue_delayed_work(lazyplug_wq, &lazyplug_work,
 			msecs_to_jiffies(10));
 	} else {
-		if (lazyplug_active) {
-			pr_info("lazyplug: screen-off, turn off cores\n");
-			flush_workqueue(lazyplug_wq);
-			mutex_lock(&lazyplug_mutex);
-			mutex_unlock(&lazyplug_mutex);
-			// put rest of the cores to sleep unconditionally!
-			cpu_all_ctrl(false);
-		}
+		pr_info("lazyplug: screen-off, turn off cores\n");
+		flush_workqueue(lazyplug_wq);
+		mutex_lock(&lazyplug_mutex);
+		mutex_unlock(&lazyplug_mutex);
+		// put rest of the cores to sleep unconditionally!
+		cpu_all_ctrl(false);
 	}
 }
 
@@ -430,13 +419,8 @@ void lazyplug_enter_lazy(bool enter)
 	if (enter && !Lprevious_state) {
 		pr_info("lazyplug: entering lazy mode\n");
 		Lnr_run_profile_sel = nr_run_profile_sel;
-<<<<<<< HEAD
-		Ltouch_boost_active = touch_boost_active;
 		nr_run_profile_sel = 2; /* conversative profile */
 		touch_boost_active = false;
-=======
-		nr_run_profile_sel = 6; /* lazy profile */
->>>>>>> 8997785... lazyplug: Remove input handler
 		Lprevious_state = true;
 	} else if (!enter && Lprevious_state) {
 		pr_info("lazyplug: exiting lazy mode\n");

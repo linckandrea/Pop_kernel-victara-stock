@@ -537,8 +537,6 @@ static struct input_handler lazyplug_input_handler = {
 
 int __init lazyplug_init(void)
 {
-	int rc;
-
 	nr_possible_cores = num_possible_cpus();
 
 	pr_info("lazyplug: version %d.%d by arter97\n"

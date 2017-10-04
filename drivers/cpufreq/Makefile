@@ -10,10 +10,13 @@ obj-$(CONFIG_CPU_FREQ_GOV_USERSPACE)	+= cpufreq_userspace.o
 obj-$(CONFIG_CPU_FREQ_GOV_ONDEMAND)	+= cpufreq_ondemand.o
 obj-$(CONFIG_CPU_FREQ_GOV_CONSERVATIVE)	+= cpufreq_conservative.o
 obj-$(CONFIG_CPU_FREQ_GOV_INTERACTIVE)	+= cpufreq_interactive.o
-obj-$(CONFIG_CPU_BOOST)                 += cpu-boost.o
+#obj-$(CONFIG_CPU_BOOST)                 += cpu-boost.o
 obj-$(CONFIG_CPU_FREQ_GOV_INTELLIACTIVE)+= cpufreq_intelliactive.o
 obj-$(CONFIG_CPU_FREQ_GOV_SMARTMAX_EPS) += cpufreq_smartmax_eps.o
 obj-$(CONFIG_CPU_FREQ_GOV_BIOSHOCK)	+= cpufreq_bioshock.o
+
+# CPU Input Boost
+obj-$(CONFIG_CPU_INPUT_BOOST)		+= cpu_input_boost.o
 
 # CPUfreq cross-arch helpers
 obj-$(CONFIG_CPU_FREQ_TABLE)		+= freq_table.o

@@ -3954,7 +3954,11 @@ int mdss_mdp_ad_input(struct msm_fb_data_type *mfd,
 	mutex_lock(&ad->lock);
 	if ((!PP_AD_STATE_IS_INITCFG(ad->state) &&
 			!PP_AD_STS_IS_DIRTY(ad->sts)) &&
+<<<<<<< HEAD
 			((input->mode) == MDSS_AD_MODE_CALIB)) {
+=======
+			(input->mode != MDSS_AD_MODE_CALIB)) {
+>>>>>>> 273fd3ac40f... Massive code cleaning...
 		pr_warn("AD not initialized or configured.");
 		ret = -EPERM;
 		goto error;

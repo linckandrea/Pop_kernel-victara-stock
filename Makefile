@@ -377,7 +377,30 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security -Wno-sizeof-pointer-memaccess \
-		   -fno-delete-null-pointer-checks
+		   -fno-delete-null-pointer-checks \
+		   -Wno-maybe-uninitialized \
+		   -Wno-incompatible-pointer-types \
+		   -Wno-format-security \
+		   -Wno-discarded-array-qualifiers \
+		   -Wno-memset-transposed-args \
+		   -Wno-bool-compare \
+		   -Wno-logical-not-parentheses \
+		   -Wno-switch-bool \
+		   -Wno-array-bounds \
+		   -Wno-misleading-indentation \
+		   -Wno-format-truncation \
+		   -Wno-bool-operation \
+		   -Wno-duplicate-decl-specifier \
+		   -Wno-memset-elt-size \
+		   -Wno-parentheses \
+		   -Wno-format-overflow \
+		   -Wno-int-in-bool-context \
+		   -Wno-switch-unreachable \
+                   -Wno-unused-function \
+                   -Wno-unused-label \
+                   -Wno-unused-parameter \
+                   -Wno-unused-value \
+                   -Wno-unused-variable
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__

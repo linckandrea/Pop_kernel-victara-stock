@@ -22396,7 +22396,7 @@ WDI_ResponseTimerCB
  @see
  @return Result of the function call
 */
-WPT_INLINE WDI_Status
+WDI_Status
 WDI_ProcessResponse
 (
   WDI_ControlBlockType*  pWDICtx,

@@ -3818,18 +3818,20 @@ bool freeze_workqueues_busy(void)
 		list_for_each_entry(wq, &workqueues, list) {
 		
 		    struct cpu_workqueue_struct *cwq;
-		    if (cpu < CONFIG_NR_CPUS)
+		    if (cpu < CONFIG_NR_CPUS) {
 			cwq = get_cwq(cpu, wq);
-		    else
+		   } else {
 			continue;
 
 			if (!cwq || !(wq->flags & WQ_FREEZABLE))
-				continue;
+                        {
+			continue;
+                        }
 
 			BUG_ON(cwq->nr_active < 0);
 			if (cwq->nr_active) {
 				busy = true;
-				goto out_unlock;
+				goto out_unlock;}
 			}
 		}
 	}

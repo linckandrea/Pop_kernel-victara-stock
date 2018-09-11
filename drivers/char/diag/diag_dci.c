@@ -1205,7 +1205,9 @@ static int diag_process_dci_pkt_rsp(unsigned char *buf, int len)
 	struct dci_pkt_req_entry_t *req_entry = NULL;
 
 	if (!buf)
+        {
 		return -EIO;
+        }
 
 	if (len < DCI_PKT_REQ_MIN_LEN || len > USER_SPACE_DATA) {
 		pr_err("diag: dci: Invalid length %d len in %s", len, __func__);
@@ -1328,6 +1330,7 @@ int diag_process_dci_transaction(unsigned char *buf, int len)
 			pr_err("diag: dci: Invalid length in %s\n", __func__);
 			return -EIO;
 		}
+                }
 		/* find client table entry */
 		dci_entry = diag_dci_get_client_entry();
 		if (!dci_entry) {

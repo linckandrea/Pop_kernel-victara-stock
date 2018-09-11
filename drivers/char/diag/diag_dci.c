@@ -137,9 +137,10 @@ static int diag_dci_init_buffer(struct diag_dci_buffer_t *buffer, int type)
 
 static inline int diag_dci_check_buffer(struct diag_dci_buffer_t *buf, int len)
 {
-	if (!buf)
+	if (!buf) 
+        {
 		return -EINVAL;
-
+        }
 	/* Return 1 if the buffer is not busy and can hold new data */
 	if ((buf->data_len + len < buf->capacity) && !buf->in_busy)
 		return 1;
@@ -1291,12 +1292,14 @@ static int diag_process_dci_pkt_rsp(unsigned char *buf, int len)
 				 * registered on the Apps Processor
 				 */
 				if (entry.cmd_code_lo == MODE_CMD &&
-				    entry.cmd_code_hi == MODE_CMD)
-					if (entry.client_id != APPS_DATA)
+				    entry.cmd_code_hi == MODE_CMD) {
+					if (entry.client_id != APPS_DATA) {
 						continue;
+                                        }
 					ret = diag_send_dci_pkt(entry, buf, len,
 								req_entry->tag);
 					found = 1;
+                             }
 			}
 		}
 	}
@@ -1420,7 +1423,7 @@ int diag_process_dci_transaction(unsigned char *buf, int len)
 		diag_update_userspace_clients(DCI_LOG_MASKS_TYPE);
 		/* send updated mask to peripherals */
 		ret = diag_send_dci_log_mask();
-	} else if (*(int *)temp == DCI_EVENT_TYPE) {
+	  else if (*(int *)temp == DCI_EVENT_TYPE) {
 		/* Minimum length of a event mask config is 12 + 4 bytes for
 		  atleast one event id to be set or reset. */
 		if (len < DCI_EVENT_CON_MIN_LEN || len > USER_SPACE_DATA) {
@@ -1495,8 +1498,9 @@ int diag_process_dci_transaction(unsigned char *buf, int len)
 		ret = diag_send_dci_event_mask();
 	} else {
 		pr_alert("diag: Incorrect DCI transaction\n");
-	}
+	       }
 	return ret;
+        
 }
 
 

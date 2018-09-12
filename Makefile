@@ -373,7 +373,8 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security -Wno-sizeof-pointer-memaccess \
-		   -fno-delete-null-pointer-checks -std=gnu89
+		   -fno-delete-null-pointer-checks -std=gnu89 -Wno-duplicate-decl-specifier \
+                   -Wno-switch-unreachable
 
 # Disable unused-constant-variable warnings
  KBUILD_CFLAGS	+= $(call cc-disable-warning,unused-const-variable,)

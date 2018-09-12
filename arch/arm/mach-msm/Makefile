@@ -1,3 +1,5 @@
+EXTRA_CFLAGS += -Wno-int-in-bool-context
+
 ifdef CONFIG_FUNCTION_TRACER
 CFLAGS_REMOVE_timer.o = -pg
 CFLAGS_REMOVE_clock.o = -pg

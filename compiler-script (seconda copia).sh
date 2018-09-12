@@ -4,6 +4,6 @@ export CROSS_COMPILE=/home/andrea/U7/bin/arm-eabi-
 
 make clean && make mrproper
 
-make prova_defconfig
+make test_defconfig
 
 make -j6

@@ -3127,14 +3127,6 @@ config MMI_DEVICE_DTBS
 	  Only include Motorola device specific DTBs to limit the number that
 	  get built during kernel compilation.
 
-config MSM_HOTPLUG
-	bool "MSM hotplug driver"
-	depends on HOTPLUG_CPU
-	default y
-	help
-	  The MSM hotplug driver controls on-/offlining of additional cores based
-	  on current cpu load.
-
 config MMI_TITAN_DTB
 	depends on ARCH_MSM8226
 	default n

@@ -373,17 +373,13 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security -Wno-sizeof-pointer-memaccess \
-		   -fno-delete-null-pointer-checks -std=gnu89 -Wno-duplicate-decl-specifier \
-                   -Wno-switch-unreachable
+		   -fno-delete-null-pointer-checks -std=gnu89
 
 # Disable unused-constant-variable warnings
  KBUILD_CFLAGS	+= $(call cc-disable-warning,unused-const-variable,)
  
 # Disable format-truncation warnings
 KBUILD_CFLAGS += $(call cc-disable-warning,format-truncation,)
-
-# Disable maybe-uninitialized warnings
-KBUILD_CFLAGS  += $(call cc-disable-warning,maybe-uninitialized,)
 
 # Needed to unbreak GCC 7.x and above
 KBUILD_CFLAGS += $(call cc-option,-fno-store-merging,)

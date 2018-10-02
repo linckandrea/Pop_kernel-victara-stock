@@ -66,6 +66,7 @@ config SDIO_UART
 	  class, as well as the GPS class which appears like a UART.
 
 config MMC_TEST
+        default n
 	tristate "MMC host test driver"
 	help
 	  Development driver that performs a series of reads and writes
@@ -78,6 +79,7 @@ config MMC_TEST
 	  testing a host driver. Most people should say N here.
 
 config MMC_BLOCK_TEST
+        default n
 	tristate "MMC block test"
 	depends on MMC_BLOCK && IOSCHED_TEST
 	help

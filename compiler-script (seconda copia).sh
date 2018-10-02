@@ -1,6 +1,6 @@
 export ARCH=arm && export SUBARCH=arm
 
-export CROSS_COMPILE=/home/andrea/U7/bin/arm-eabi-
+export CROSS_COMPILE=/home/andrea/TC/bin/arm-eabi-
 
 make clean && make mrproper
 

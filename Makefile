@@ -250,8 +250,8 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
-HOSTCXXFLAGS = -O2
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -g0 -DNDEBUG -std=gnu89
+HOSTCXXFLAGS = -O2 -g0 -DNDEBUG
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -354,7 +354,7 @@ CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
 CFLAGS_MODULE   =
 AFLAGS_MODULE   =
-LDFLAGS_MODULE  =
+LDFLAGS_MODULE  = --strip-debug
 CFLAGS_KERNEL	=
 AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
@@ -373,10 +373,12 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security -Wno-sizeof-pointer-memaccess \
-		   -fno-delete-null-pointer-checks -std=gnu89
+		   -fno-delete-null-pointer-checks \
+                   -mcpu=cortex-a15 -mtune=cortex-a15 -mfpu=neon-vfpv4 \
+                   -g0 -DNDEBUG -std=gnu89
 
 # Disable unused-constant-variable warnings
- KBUILD_CFLAGS	+= $(call cc-disable-warning,unused-const-variable,)
+KBUILD_CFLAGS	+= $(call cc-disable-warning,unused-const-variable,)
  
 # Disable format-truncation warnings
 KBUILD_CFLAGS += $(call cc-disable-warning,format-truncation,)
@@ -576,7 +578,7 @@ all: vmlinux
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
 else
-KBUILD_CFLAGS	+= -O2
+KBUILD_CFLAGS	+= -finline-functions -O2
 endif
 
 include $(srctree)/arch/$(SRCARCH)/Makefile

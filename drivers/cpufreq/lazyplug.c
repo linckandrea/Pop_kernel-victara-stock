@@ -69,7 +69,6 @@
 #include <linux/mutex.h>
 #include <linux/module.h>
 #include <linux/slab.h>
-#include <linux/input.h>
 #include <linux/cpufreq.h>
 
 #ifdef CONFIG_POWERSUSPEND
@@ -106,9 +105,6 @@ static struct workqueue_struct *lazyplug_boost_wq;
 
 static unsigned int __read_mostly lazyplug_active = 0;
 module_param(lazyplug_active, uint, 0664);
-
-static unsigned int __read_mostly touch_boost_active = 1;
-module_param(touch_boost_active, uint, 0664);
 
 static unsigned int __read_mostly nr_run_profile_sel = 0;
 module_param(nr_run_profile_sel, uint, 0664);
@@ -384,23 +380,8 @@ static void lazyplug_work_fn(struct work_struct *work)
 			pr_info("lazyplug is suspended!\n");
 #endif
 	}
-	queue_delayed_work_on(0, lazyplug_wq, &lazyplug_work,
+	queue_delayed_work(lazyplug_wq, &lazyplug_work,
 		msecs_to_jiffies(sampling_time));
-}
-
-<<<<<<< HEAD
-static void wakeup_boost(void)
-{
-	unsigned int cpu;
-	struct cpufreq_policy *policy;
-	struct ip_cpu_info *l_ip_info;
-
-	for_each_online_cpu(cpu) {
-		policy = cpufreq_cpu_get(cpu);
-		l_ip_info = &per_cpu(ip_info, cpu);
-		policy->cur = l_ip_info->cur_max;
-		cpufreq_update_policy(cpu);
-	}
 }
 
 #if defined(CONFIG_POWERSUSPEND) || defined(CONFIG_HAS_EARLYSUSPEND)
@@ -448,7 +429,7 @@ static void lazyplug_resume(struct early_suspend *handler)
 
 		schedule_work(&cpu_all_up_work);
 	}
-	queue_delayed_work_on(0, lazyplug_wq, &lazyplug_work,
+	queue_delayed_work(lazyplug_wq, &lazyplug_work,
 		msecs_to_jiffies(10));
 }
 #endif
@@ -468,10 +449,7 @@ static struct early_suspend lazyplug_early_suspend_driver = {
 };
 #endif	/* CONFIG_HAS_EARLYSUSPEND */
 
-=======
->>>>>>> 08b180d4194... lazyplug: Remove wakeup_boost
 static unsigned int Lnr_run_profile_sel = 0;
-static unsigned int Ltouch_boost_active = true;
 static bool Lprevious_state = false;
 void lazyplug_enter_lazy(bool enter)
 {
@@ -481,94 +459,14 @@ void lazyplug_enter_lazy(bool enter)
 		Lnr_run_profile_sel = nr_run_profile_sel;
 		Ltouch_boost_active = touch_boost_active;
 		nr_run_profile_sel = 2; /* conversative profile */
-		touch_boost_active = false;
 		Lprevious_state = true;
 	} else if (!enter && Lprevious_state) {
 		pr_info("lazyplug: exiting lazy mode\n");
-		touch_boost_active = Ltouch_boost_active;
 		nr_run_profile_sel = Lnr_run_profile_sel;
 		Lprevious_state = false;
 	}
 	mutex_unlock(&lazymode_mutex);
 }
-
-static void lazyplug_input_event(struct input_handle *handle,
-		unsigned int type, unsigned int code, int value)
-{
-#ifdef DEBUG_LAZYPLUG
-	pr_info("lazyplug touched!\n");
-#endif
-
-	if (lazyplug_active && touch_boost_active && !suspended) {
-		idle_count = 0;
-		queue_delayed_work_on(0, lazyplug_wq, &lazyplug_boost,
-			msecs_to_jiffies(10));
-	}
-}
-
-static int lazyplug_input_connect(struct input_handler *handler,
-		struct input_dev *dev, const struct input_device_id *id)
-{
-	struct input_handle *handle;
-	int error;
-
-	handle = kzalloc(sizeof(struct input_handle), GFP_KERNEL);
-	if (!handle)
-		return -ENOMEM;
-
-	handle->dev = dev;
-	handle->handler = handler;
-	handle->name = "lazyplug";
-
-	error = input_register_handle(handle);
-	if (error)
-		goto err2;
-
-	error = input_open_device(handle);
-	if (error)
-		goto err1;
-	pr_info("%s found and connected!\n", dev->name);
-	return 0;
-err1:
-	input_unregister_handle(handle);
-err2:
-	kfree(handle);
-	return error;
-}
-
-static void lazyplug_input_disconnect(struct input_handle *handle)
-{
-	input_close_device(handle);
-	input_unregister_handle(handle);
-	kfree(handle);
-}
-
-static const struct input_device_id lazyplug_ids[] = {
-	{
-		.flags = INPUT_DEVICE_ID_MATCH_EVBIT |
-			 INPUT_DEVICE_ID_MATCH_ABSBIT,
-		.evbit = { BIT_MASK(EV_ABS) },
-		.absbit = { [BIT_WORD(ABS_MT_POSITION_X)] =
-			    BIT_MASK(ABS_MT_POSITION_X) |
-			    BIT_MASK(ABS_MT_POSITION_Y) },
-	}, /* multi-touch touchscreen */
-	{
-		.flags = INPUT_DEVICE_ID_MATCH_KEYBIT |
-			 INPUT_DEVICE_ID_MATCH_ABSBIT,
-		.keybit = { [BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH) },
-		.absbit = { [BIT_WORD(ABS_X)] =
-			    BIT_MASK(ABS_X) | BIT_MASK(ABS_Y) },
-	}, /* touchpad */
-	{ },
-};
-
-static struct input_handler lazyplug_input_handler = {
-	.event          = lazyplug_input_event,
-	.connect        = lazyplug_input_connect,
-	.disconnect     = lazyplug_input_disconnect,
-	.name           = "lazyplug_handler",
-	.id_table       = lazyplug_ids,
-};
 
 int __init lazyplug_init(void)
 {
@@ -589,8 +487,6 @@ int __init lazyplug_init(void)
 		nr_run_profile_sel = NR_RUN_ECO_MODE_PROFILE;
 	}
 
-	rc = input_register_handler(&lazyplug_input_handler);
-
 #ifdef CONFIG_POWERSUSPEND
 	register_power_suspend(&lazyplug_power_suspend_driver);
 #endif
@@ -604,7 +500,7 @@ int __init lazyplug_init(void)
 				WQ_HIGHPRI | WQ_UNBOUND, 1);
 	INIT_DELAYED_WORK(&lazyplug_work, lazyplug_work_fn);
 	INIT_DELAYED_WORK(&lazyplug_boost, lazyplug_boost_fn);
-	queue_delayed_work_on(0, lazyplug_wq, &lazyplug_work,
+	queue_delayed_work(lazyplug_wq, &lazyplug_work,
 		msecs_to_jiffies(10));
 
 	return 0;
